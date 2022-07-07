@@ -47,12 +47,11 @@ extern int yydebug;
   {
     IDENTIFIER = 258,
     STRING = 259,
-    NUMBER = 260,
-    FUNCAO = 261,
-    END = 262,
-    PUTS = 263,
-    LP = 264,
-    RP = 265
+    FUNCAO = 260,
+    END = 261,
+    PUTS = 262,
+    LP = 263,
+    RP = 264
   };
 #endif
 
@@ -61,13 +60,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 23 "ruby_parser.y" /* yacc.c:1909  */
+#line 18 "ruby_parser.y" /* yacc.c:1909  */
 
-	 char *p_string;
+	char *string;
 	int   yint;
-	
 
-#line 71 "ruby_parser.tab.h" /* yacc.c:1909  */
+#line 69 "ruby_parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

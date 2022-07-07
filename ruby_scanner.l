@@ -15,11 +15,11 @@ STRING ["]{ALL_DIGITS}["]
 
 "puts" {return PUTS;}
 "def" {return FUNCAO;}
-{IDENTIFIER} { yylval.p_string=malloc(yyleng); sprintf(yylval.p_string,"%s",yytext);return IDENTIFIER;}
+{IDENTIFIER} { yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return IDENTIFIER;}
 "(" {return LP;}
 ")" {return RP;}
 "end" {return END;}
-{STRING} {yylval.p_string=malloc(yyleng); sprintf(yylval.p_string,"%s",yytext);return STRING;}
+{STRING} {yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return STRING;}
 [\n\t ]+	{/* ignoring newlines, tabs and spaces */}
 
 %%

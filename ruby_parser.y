@@ -6,25 +6,14 @@
     int yyerror();
     int yylex();
 
-    void write_on_output_file(char *text){     
-        int total_length = sizeof(text);
-        char *file_content = malloc(total_length);
-        sprintf(file_content,"%s",text);
-        fprintf(output_portugol,"%s",file_content);
-        free(file_content);
-    }
-
 %}
 %union {
-	char *string;
+	char *py_string;
 	int   yint;
 }
 %start programa
-%token <string> IDENTIFIER
-%token <string> STRING
-%token <string> INT
-%token <string> FLOAT
-%token <string> NUMBER
+%token <py_string> IDENTIFIER
+%token <py_string> STRING
 %token FUNCAO END PUTS LP RP
 
 
@@ -54,7 +43,7 @@ commands : /* empty */
 ;
 
 command : PUTS STRING
-{ fprintf(python_output,"print(%s)", STRING);}
+{ fprintf(python_output,"print(%s)", $2);}
 /*
 | READ IDENTIFIER
 |IDENTIFIER ASSGNOP exp
