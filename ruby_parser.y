@@ -23,7 +23,7 @@
 %token <py_string> IDENTIFIER
 %token <py_string> STRING
 %token <py_string> NUMERIC
-%token DEF END PUTS LP RP RC LC COMMA EQ LPA RPA IF
+%token DEF END PUTS LP RP RC LC LPA RPA COMMA EQ IF ELSE ELSIF EQEQ FOR IN RANGE WHILE DO PLUSEQ LESSEQ
 
 
 %%
@@ -32,21 +32,6 @@ programa :
  commands
 ;
 
-/*
-function_declaration: FUNCAO IDENTIFIER LP RP
-{
-  char *function_name = element_name($2);
-  char *function_type = "void";
-  char *function_params = "void";
-  char *open_block = "{";
-  int total_length = sizeof(function_name) + sizeof(function_type) + sizeof(function_params)+ sizeof(open_block);
-  char *file_content = malloc(total_length);
-
-  sprintf(file_content,"%s %s(){ ",function_type,function_name);
-  fprintf(output_portugol,"%s",file_content);
-}
-;
-*/
 commands : /* Vazio */
 | commands command
 | commands declarations
@@ -59,14 +44,23 @@ command : PUTS {(write_to_python("print("));} exp {(write_to_python(")\n"));}
   END {(write_to_python(""));}
 | /* function call */
   IDENTIFIER {(write_to_python($1));} params {(write_to_python("\n"));} 
-| IF {(write_to_python("if "));} IDENTIFIER {(write_to_python($3));} exp {(write_to_python(":\n   "));} 
-/*
-| READ IDENTIFIER
-|IDENTIFIER ASSGNOP exp
-| IF exp commands END
-| WHILE exp DO commands END
-| FOR exp 
-*/
+| IF {(write_to_python("if "));} exp_cond exp_cond {(write_to_python(":\n   "));} 
+  commands 
+  conditions
+| FOR {(write_to_python("for "));} IDENTIFIER {(write_to_python($3));} IN {(write_to_python(" in range("));} range_types {(write_to_python("):\n    "));} 
+  commands
+  END {(write_to_python("\n"));}
+| WHILE {(write_to_python("while "));} exp exp DO {(write_to_python(":\n    "));}
+  commands
+  END {(write_to_python("\n"));}
+;
+
+range_types : NUMERIC {(write_to_python($1));} RANGE {(write_to_python(", "));} NUMERIC {(write_to_python($5));}
+;
+
+conditions : /* Vazio */ END {(write_to_python("\n"));}
+| ELSE {(write_to_python("else")); (write_to_python(":\n   "));} commands END {(write_to_python("\n"));}
+| ELSIF {(write_to_python("elif "));} exp_cond exp_cond {(write_to_python(":\n   "));} commands conditions
 ;
 
 params : /* Vazio */ {(write_to_python("()"));}
@@ -93,8 +87,10 @@ exp : STRING {(write_to_python($1));}
 | IDENTIFIER {(write_to_python($1));}
 | EQ {(write_to_python(" = "));} exp {(write_to_python("\n"));}
 | LC {(write_to_python("["));} int_vector RC {(write_to_python("]"));}
-| LPA {(write_to_python('<'));} exp
-| RPA {(write_to_python('>'));} exp
+| LPA {(write_to_python("<"));} exp
+| RPA {(write_to_python(">"));} exp 
+| PLUSEQ {(write_to_python(" += "));} exp
+| LESSEQ {(write_to_python(" -= "));} exp
 /*
 | exp {(write_to_python('+'));} exp
 | exp {(write_to_python('-'));} exp
@@ -105,6 +101,14 @@ exp : STRING {(write_to_python($1));}
 */
 ;
 
+exp_cond : STRING {(write_to_python($1));}
+| NUMERIC {(write_to_python($1));}
+| IDENTIFIER {(write_to_python($1));}
+| EQEQ {(write_to_python(" == "));} exp_cond
+| LC {(write_to_python("["));} int_vector RC {(write_to_python("]"));}
+| LPA {(write_to_python("<"));} exp_cond
+| RPA {(write_to_python(">"));} exp_cond
+;
 %%
 
 int yyerror()
