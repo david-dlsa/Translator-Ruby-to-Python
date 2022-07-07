@@ -28,6 +28,7 @@ NUMERIC {DIGIT}
 ".." {return RANGE;}
 "while" {return WHILE;}
 "do" {return DO;}
+"gets.chomp" {return GP;}
 "end" {return END;}
 {NUMERIC} {yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return NUMERIC;}
 {IDENTIFIER} { yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return IDENTIFIER;}

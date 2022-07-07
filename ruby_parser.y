@@ -23,7 +23,7 @@
 %token <py_string> IDENTIFIER
 %token <py_string> STRING
 %token <py_string> NUMERIC
-%token DEF END PUTS LP RP RC LC LPA RPA COMMA EQ IF ELSE ELSIF EQEQ FOR IN RANGE WHILE DO PLUSEQ LESSEQ
+%token DEF END PUTS LP RP RC LC LPA RPA COMMA EQ IF ELSE ELSIF EQEQ FOR IN RANGE WHILE DO PLUSEQ LESSEQ GP
 
 
 %%
@@ -38,6 +38,8 @@ commands : /* Vazio */
 ;
 
 command : PUTS {(write_to_python("print("));} exp {(write_to_python(")\n"));}
+| PUTS STRING
+  IDENTIFIER {(write_to_python($3));} EQ {(write_to_python(" = "));} GP {(write_to_python("input(")); (write_to_python($2)); (write_to_python(")\n"));}
 | /* function declaration */
   DEF {(write_to_python("def "));} IDENTIFIER {(write_to_python($3));} params {(write_to_python(":\n   "));} 
   commands {(write_to_python("\n"));}

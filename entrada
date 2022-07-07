@@ -1,13 +1,7 @@
-x = 1
-while x < 5 do
-    puts "teste"
-    for k in 7..8
-        if 5 < x
-            puts "eita"
-        end
-    end
-    x += 1
-end
+puts "escreva seu nome"
+nome = gets.chomp
+
+puts nome
 
 
 
