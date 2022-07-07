@@ -1,2 +1,25 @@
-puts "Hello FILIPE!"
+def escreveNome(nome)
+    nome = "David"
+    puts nome
+end
+
+def sobrenome
+    sobrenome = "Andrade"
+end
+
+escreveNome(nome)
+sobrenome()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
