@@ -6,6 +6,14 @@
     int yyerror();
     int yylex();
 
+  void write_to_python(char *text)
+  {     int total_length = sizeof(text);
+        char *file_content = malloc(total_length);
+        sprintf(file_content,"%s",text);
+        fprintf(python_output,"%s",file_content);
+        free(file_content);
+  }
+
 %}
 %union {
 	char *py_string;
@@ -42,8 +50,7 @@ commands : /* empty */
 | commands command
 ;
 
-command : PUTS STRING
-{ fprintf(python_output,"print(%s)", $2);}
+command : PUTS {(write_to_python("print("));} exp
 /*
 | READ IDENTIFIER
 |IDENTIFIER ASSGNOP exp
@@ -53,9 +60,9 @@ command : PUTS STRING
 */
 ;
 
-/*
-exp :
 
+exp : STRING {(write_to_python($1)); (write_to_python(")"));}
+/*
 | NUMBER
 | IDENTIFIER
 | exp '<' exp
