@@ -17,13 +17,19 @@ NUMERIC {DIGIT}
 
 "puts" {return PUTS;}
 "def" {return DEF;}
+"if" {return IF;}
 "end" {return END;}
+{NUMERIC} {yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return NUMERIC;}
 {IDENTIFIER} { yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return IDENTIFIER;}
 "(" {return LP;}
 ")" {return RP;}
+"[" {return LC;}
+"]" {return RC;}
+"," {return COMMA;}
+"<" {return LPA;}
+">" {return RPA;}
 {EQ} {return EQ;}
 {STRING} {yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return STRING;}
-{NUMERIC} {yylval.py_string=malloc(yyleng); sprintf(yylval.py_string,"%s",yytext);return NUMERIC;}
 [\n\t ]+	{/* ignoring newlines, tabs and spaces */}
 
 %%

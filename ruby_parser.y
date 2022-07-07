@@ -23,7 +23,7 @@
 %token <py_string> IDENTIFIER
 %token <py_string> STRING
 %token <py_string> NUMERIC
-%token DEF END PUTS LP RP EQ
+%token DEF END PUTS LP RP RC LC COMMA EQ LPA RPA IF
 
 
 %%
@@ -58,7 +58,8 @@ command : PUTS {(write_to_python("print("));} exp {(write_to_python(")\n"));}
   commands {(write_to_python("\n"));}
   END {(write_to_python(""));}
 | /* function call */
-  IDENTIFIER {(write_to_python($1));} params
+  IDENTIFIER {(write_to_python($1));} params {(write_to_python("\n"));} 
+| IF {(write_to_python("if "));} IDENTIFIER {(write_to_python($3));} exp {(write_to_python(":\n   "));} 
 /*
 | READ IDENTIFIER
 |IDENTIFIER ASSGNOP exp
@@ -69,21 +70,32 @@ command : PUTS {(write_to_python("print("));} exp {(write_to_python(")\n"));}
 ;
 
 params : /* Vazio */ {(write_to_python("()"));}
-| LP {(write_to_python("("));} exp RP {(write_to_python(")\n    "));}
+| LP {(write_to_python("("));} anything RP {(write_to_python(")"));}
 ;
 
 
-declarations : IDENTIFIER {(write_to_python($1));} exp 
+declarations : IDENTIFIER {(write_to_python($1));} exp
 ;
 
+int_vector : /* Vazio */
+| anything
+| anything COMMA {(write_to_python(","));} int_vector
+;
+
+anything : /* Vazio */
+| STRING {(write_to_python($1));}
+| NUMERIC {(write_to_python($1));}
+| IDENTIFIER {(write_to_python($1));}
+;
 
 exp : STRING {(write_to_python($1));}
 | NUMERIC {(write_to_python($1));}
 | IDENTIFIER {(write_to_python($1));}
 | EQ {(write_to_python(" = "));} exp {(write_to_python("\n"));}
+| LC {(write_to_python("["));} int_vector RC {(write_to_python("]"));}
+| LPA {(write_to_python('<'));} exp
+| RPA {(write_to_python('>'));} exp
 /*
-| exp {(write_to_python('<'));} exp
-| exp {(write_to_python('>'));} exp
 | exp {(write_to_python('+'));} exp
 | exp {(write_to_python('-'));} exp
 | exp {(write_to_python('*'));} exp

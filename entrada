@@ -1,15 +1,6 @@
-def escreveNome(nome)
-    nome = "David"
-    puts nome
+if x > 2
+    puts "É maior"
 end
-
-def sobrenome
-    sobrenome = "Andrade"
-end
-
-escreveNome(nome)
-sobrenome()
-
 
 
 
